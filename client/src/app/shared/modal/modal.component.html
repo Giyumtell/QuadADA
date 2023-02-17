@@ -10,10 +10,27 @@
 <div class="modal-body">
   <p>{{ content }}</p>
   <button
+    *ngIf="!mode"
     type="button"
     class="btn btn-outline-dark"
     (click)="activeModal.close('ok')"
   >
     OK
+  </button>
+  <button
+    *ngIf="mode"
+    type="button"
+    class="btn btn-outline-dark"
+    (click)="activeModal.close('ok')"
+  >
+    YES
+  </button>
+  <button
+    *ngIf="mode"
+    type="button"
+    class="btn btn-outline-dark"
+    (click)="activeModal.close('No')"
+  >
+    NO
   </button>
 </div>

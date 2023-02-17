@@ -105,8 +105,9 @@
         <td *ngIf="!dataProvider.editMode">****</td>
         <td *ngIf="dataProvider.editMode">
           <input
-            type="text"
+            type="email"
             name="email"
+            [email]="true"
             (input)="onChange()"
             formControlName="{{
               user.userId === '' ? 'email--' + i : user.userId + 'email'

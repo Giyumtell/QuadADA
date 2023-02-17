@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  EmailValidator,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ColumnDefinition } from '../shared/models/columnDefinition';
 import { User } from '../shared/models/user';
-import { UserControl } from '../shared/models/userControl';
 import { UserAccessService } from '../user-access/user-access.service';
 
 @Injectable({
@@ -11,7 +15,7 @@ import { UserAccessService } from '../user-access/user-access.service';
 export class UserService {
   columns: ColumnDefinition[];
   public filteredUser: User[];
-  public newControlTracker: UserControl[];
+  public newControlTracker: User[];
   users: User[];
   public controls: {};
   //reactive form
@@ -111,10 +115,6 @@ export class UserService {
     this.maxLength++;
   };
 
-  resetCountNewUser = () => {
-    this.maxLength = 0;
-  };
-
   //initializing form by generating controls for each column header and merging with controls for rows
   initializeForm = (columns: ColumnDefinition[]) => {
     var objheader = {};
@@ -158,7 +158,7 @@ export class UserService {
       this.controls[user.userId + 'email'] = [user.email, Validators.required];
     });
   };
-  addControlToTracker = (controls: UserControl) => {
+  addControlToTracker = (controls: User) => {
     this.newControlTracker.push(controls);
   };
   deleteControlTrackerAtIndex = (index: number) => {
@@ -172,7 +172,6 @@ export class UserService {
     this.userForm.removeControl(this.newControlTracker[index].password);
     this.userForm.removeControl(this.newControlTracker[index].email);
   };
-  remove;
   //USER SERVICES///////////////////////////////////////
   //if user doesnt exist we add it to the array of users
   public addNewUser = (user: User) => {
@@ -188,7 +187,7 @@ export class UserService {
       this.userAccessService.userAccesses.filter((item) => item.userId !== id);
     this.users = this.users.filter((user) => user.userId !== id);
   };
-  //find the user index and replace it
+  //find the user index and replace it otherwise add it
   public updateOrAdd = (user: User) => {
     var index = this.indexOfUserOrFalse(user.userId);
     if (index !== false) {
@@ -211,17 +210,9 @@ export class UserService {
     return index === -1 ? false : index;
   };
   persist = () => {
-    console.log(this.filteredUser);
-    console.log(this.users);
     this.saveFormToTemp();
-    console.log(this.filteredUser);
-    console.log(this.users);
     this.updateOrAddBalk(this.filteredUser);
-    console.log(this.filteredUser);
-    console.log(this.users);
     this.filteredUser = this.users;
-    console.log(this.filteredUser);
-    console.log(this.users);
     this.generateControls();
     this.resetForm();
   };

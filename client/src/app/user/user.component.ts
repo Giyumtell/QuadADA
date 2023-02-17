@@ -5,15 +5,12 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalComponent } from '../shared/modal/modal.component';
 import { UserService } from './user.service';
 import { FormBuilder, Validators } from '@angular/forms';
-import { error } from 'console';
-
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
 })
 export class UserComponent implements OnInit, AfterViewInit {
-  invalid: boolean;
   //refrence to each table header
   @ViewChildren('headerRefArray') headerRef: any;
   headerRefArray: any;
@@ -23,9 +20,7 @@ export class UserComponent implements OnInit, AfterViewInit {
     public userService: UserService,
     private modalService: NgbModal,
     private fb: FormBuilder
-  ) {
-    this.invalid = false;
-  }
+  ) {}
 
   ngOnInit(): void {
     //initializing variables on component creation
@@ -114,9 +109,10 @@ export class UserComponent implements OnInit, AfterViewInit {
   //userId column checks if user exists on Blur event
   onBlur = (control: string) => {
     let value = this.userService.userForm.get(control).value;
-    if (this.userService.indexOfUserOrFalse(value) !== false) {
+    if (this.userService.indexOfUserOrFalse(value) !== false && value !== '') {
       const modalRef = this.modalService.open(ModalComponent);
       modalRef.componentInstance.content = `${value} already defined`;
+      modalRef.componentInstance.mode = false;
     }
   };
   //every Column checks if the form is valid on every single change in input
@@ -135,6 +131,7 @@ export class UserComponent implements OnInit, AfterViewInit {
     } else {
       //if we are removing a user
       const modalRef = this.modalService.open(ModalComponent);
+      modalRef.componentInstance.mode = true;
       modalRef.componentInstance.content = `${user.userId} will be deleted. Confirm?`;
       modalRef.result
         .then((result) => {

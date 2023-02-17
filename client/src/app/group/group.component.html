@@ -1,18 +1,85 @@
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th scope="col" *ngIf="dataProvider.editMode"><button>Add</button></th>
-      <th scope="col">Group id</th>
-      <th scope="col">Group Name</th>
-      <th scope="col">Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let group of groupService.groups">
-      <td *ngIf="dataProvider.editMode"><button>remove</button></td>
-      <td>{{ group.id }}</td>
-      <td>{{ group.name }}</td>
-      <td>{{ group.description }}</td>
-    </tr>
-  </tbody>
-</table>
+<form [formGroup]="groupService.groupForm">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col" *ngIf="dataProvider.editMode">
+          <a (click)="addEmptyGroup()" class="pointer"
+            ><i class="fa-solid fa-plus"></i
+          ></a>
+        </th>
+        <th scope="col" *ngIf="!dataProvider.editMode">
+          <div class="dummy"></div>
+        </th>
+        <th scope="col" *ngFor="let column of groupService.columns; index as i">
+          <ng-container *ngIf="!column.filterable"
+            ><div #headerRefArray>
+              {{ column.header }}
+            </div></ng-container
+          >
+          <ng-container *ngIf="column.filterable">
+            <span (click)="switchToEnable(column.id, i)">
+              <input
+                type="text"
+                #headerRefArray
+                class="disabled"
+                formControlName="{{ column.id }}"
+                (blur)="switchToDisable(column.id, i)"
+                (input)="filterColumn(i)"
+              />
+            </span>
+          </ng-container>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let group of groupService.filteredGroups; index as i">
+        <td *ngIf="dataProvider.editMode">
+          <a (click)="removeGroup(group, i)" class="pointer"
+            ><i class="fa-solid fa-trash"></i
+          ></a>
+        </td>
+        <td *ngIf="!dataProvider.editMode">
+          <div class="dummy"></div>
+        </td>
+        <td *ngIf="group.id !== ''">
+          {{ groupService.filteredGroups[i].id }}
+        </td>
+        <td *ngIf="group.id === ''">
+          <input
+            type="text"
+            name="id"
+            (input)="onChange()"
+            (blur)="onBlur('id--' + i)"
+            formControlName="{{ 'id--' + i }}"
+          />
+        </td>
+        <td *ngIf="dataProvider.editMode">
+          <input
+            type="text"
+            name="name"
+            (input)="onChange()"
+            formControlName="{{
+              group.id === '' ? 'name--' + i : group.id + 'name'
+            }}"
+          />
+        </td>
+        <td *ngIf="!dataProvider.editMode">
+          {{ groupService.filteredGroups[i].name }}
+        </td>
+        <td *ngIf="dataProvider.editMode">
+          <input
+            type="text"
+            name="description"
+            (input)="onChange()"
+            formControlName="{{
+              group.id === '' ? 'description--' + i : group.id + 'description'
+            }}"
+          />
+        </td>
+        <td *ngIf="!dataProvider.editMode">
+          {{ groupService.filteredGroups[i].description }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</form>

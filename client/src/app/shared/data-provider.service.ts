@@ -25,9 +25,13 @@ export class DataProviderService {
     if (this.editMode) {
       //getting out of edit mode
       if (this.activeTab === 'User') this.userService.toggle();
+      if (this.activeTab === 'Group') this.groupService.toggle();
+      if (this.activeTab === 'UserAccess') this.userAccessService.toggle();
     } else {
       //getting into edit mode
-      this.userService.generateControls();
+      if (this.activeTab === 'User') this.userService.generateControls();
+      if (this.activeTab === 'Group') this.groupService.generateControls();
+      if (this.activeTab === 'UserAccess') this.userAccessService.generateControls();
     }
     this.editMode = !this.editMode;
   };

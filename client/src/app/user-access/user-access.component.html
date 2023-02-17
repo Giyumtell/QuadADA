@@ -1,19 +1,86 @@
-<form action="">
+<form [formGroup]="userAccessService.userAccessesForm">
   <table class="table table-striped">
     <thead>
       <tr>
-        <th scope="col" *ngIf="dataProvider.editMode"><button>Add</button></th>
-        <th scope="col">User id</th>
-        <th scope="col">Group id</th>
-        <th scope="col">Creation Date</th>
+        <th scope="col" *ngIf="dataProvider.editMode">
+          <a (click)="addEmptyUserAccess()" class="pointer"
+            ><i class="fa-solid fa-plus"></i
+          ></a>
+        </th>
+        <th scope="col" *ngIf="!dataProvider.editMode">
+          <div class="dummy"></div>
+        </th>
+        <th
+          scope="col"
+          *ngFor="let column of userAccessService.columns; index as i"
+        >
+          <ng-container *ngIf="!column.filterable"
+            ><div #headerRefArray>
+              {{ column.header }}
+            </div></ng-container
+          >
+          <ng-container *ngIf="column.filterable">
+            <span (click)="switchToEnable(column.id, i)">
+              <input
+                type="text"
+                #headerRefArray
+                class="disabled"
+                formControlName="{{ column.id }}"
+                (blur)="switchToDisable(column.id, i)"
+                (input)="filterColumn(i)"
+              />
+            </span>
+          </ng-container>
+        </th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of userAccessService.userAccesses">
-        <td *ngIf="dataProvider.editMode"><button>remove</button></td>
-        <td>{{ item.userId }}</td>
-        <td>{{ item.groupId }}</td>
-        <td>{{ item.creationDate }}</td>
+      <tr
+        *ngFor="let item of userAccessService.filteredUserAccesses; index as i"
+      >
+        <td *ngIf="dataProvider.editMode">
+          <a (click)="removeUserAccess(item, i)" class="pointer"
+            ><i class="fa-solid fa-trash"></i
+          ></a>
+        </td>
+        <td *ngIf="!dataProvider.editMode">
+          <div class="dummy"></div>
+        </td>
+        <td *ngIf="dataProvider.editMode">
+          <select
+            class="custom-select mb-3"
+            (change)="onChange($event)"
+            formControlName="{{
+              item.userId === '' ? 'userId--' + i : item.userId + item.groupId
+            }}"
+          >
+            <option>
+              {{ item.userId !== "" ? item.userId : "Select User" }}
+            </option>
+            <option *ngFor="let user of users">{{ user.userId }}</option>
+          </select>
+        </td>
+        <td *ngIf="!dataProvider.editMode">
+          {{ item.userId }}
+        </td>
+        <td *ngIf="dataProvider.editMode">
+          <select
+            class="custom-select mb-3"
+            (change)="onChange($event)"
+            formControlName="{{ item.groupId === '' ? 'groupId--' + i :item.groupId + item.userId }}"
+          >
+            <option>
+              {{ item.groupId !== "" ? item.groupId : "Select Group" }}
+            </option>
+            <option *ngFor="let group of groups">{{ group.id }}</option>
+          </select>
+        </td>
+        <td *ngIf="!dataProvider.editMode">
+          {{ item.groupId }}
+        </td>
+        <td>
+          {{ item.creationDate }}
+        </td>
       </tr>
     </tbody>
   </table>
