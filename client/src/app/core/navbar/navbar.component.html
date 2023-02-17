@@ -1,5 +1,8 @@
 <nav class="navbar navbar-expand-lg border-bottom border-secondary">
-  <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+  <div
+    class="collapse navbar-collapse justify-content-center position-relative"
+    id="navbarNav"
+  >
     <ul class="nav nav-pills">
       <li class="nav-item">
         <a
@@ -33,7 +36,7 @@
       </li>
     </ul>
   </div>
-  <div class="align-self-end">
+  <div class="align-self-end position-absolute div-btn">
     <button
       (click)="dataProvider.toggleEdit()"
       class="btn"
@@ -46,7 +49,7 @@
     </button>
     <button
       *ngIf="dataProvider.editMode"
-      class="btn btn-success"
+      class="btn btn-success btn-save"
       (click)="dataProvider.save()"
       [disabled]="!dataProvider.formValidity"
     >

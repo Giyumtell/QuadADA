@@ -8,7 +8,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let group of dataProvider.data.groups">
+    <tr *ngFor="let group of groupService.groups">
       <td *ngIf="dataProvider.editMode"><button>remove</button></td>
       <td>{{ group.id }}</td>
       <td>{{ group.name }}</td>

@@ -1,4 +1,4 @@
-<form [formGroup]="dataProvider.userForm">
+<form [formGroup]="userService.userForm">
   <table class="table table-striped">
     <thead>
       <tr>
@@ -12,12 +12,10 @@
         </th>
         <th scope="col" *ngFor="let column of userService.columns; index as i">
           <ng-container *ngIf="!column.filterable"
-            ><input
-              type="text"
-              #headerRefArray
-              value="{{ column.header }}"
-              disabled
-          /></ng-container>
+            ><div #headerRefArray>
+              {{ column.header }}
+            </div></ng-container
+          >
           <ng-container *ngIf="column.filterable">
             <span (click)="switchToEnable(column.id, i)">
               <input
@@ -34,19 +32,25 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of dataProvider.filteredUser; index as i">
-        <td *ngIf="dataProvider.editMode"><button>remove</button></td>
-        <td *ngIf="!dataProvider.editMode"><div class="dummy"></div></td>
+      <tr *ngFor="let user of userService.filteredUser; index as i">
+        <td *ngIf="dataProvider.editMode">
+          <a (click)="removeUser(user, i)" class="pointer"
+            ><i class="fa-solid fa-trash"></i
+          ></a>
+        </td>
+        <td *ngIf="!dataProvider.editMode">
+          <div class="dummy"></div>
+        </td>
         <td *ngIf="user.userId !== ''">
-          {{ dataProvider.filteredUser[i].userId }}
+          {{ userService.filteredUser[i].userId }}
         </td>
         <td *ngIf="user.userId === ''">
           <input
             type="text"
             name="userId"
             (input)="onChange()"
-            (blur)="onBlur('userId' + i)"
-            formControlName="{{ 'userId' + i }}"
+            (blur)="onBlur('userId--' + i)"
+            formControlName="{{ 'userId--' + i }}"
           />
         </td>
         <td *ngIf="dataProvider.editMode">
@@ -55,14 +59,12 @@
             name="firstName"
             (input)="onChange()"
             formControlName="{{
-              user.userId === ''
-                ? 'firstName' + i
-                : user.firstName + user.userId
+              user.userId === '' ? 'firstName--' + i : user.userId + 'firstName'
             }}"
           />
         </td>
         <td *ngIf="!dataProvider.editMode">
-          {{ dataProvider.filteredUser[i].firstName }}
+          {{ userService.filteredUser[i].firstName }}
         </td>
         <td *ngIf="dataProvider.editMode">
           <input
@@ -70,12 +72,12 @@
             name="lastName"
             (input)="onChange()"
             formControlName="{{
-              user.userId === '' ? 'lastName' + i : user.lastName + user.userId
+              user.userId === '' ? 'lastName--' + i : user.userId + 'lastName'
             }}"
           />
         </td>
         <td *ngIf="!dataProvider.editMode">
-          {{ dataProvider.filteredUser[i].lastName }}
+          {{ userService.filteredUser[i].lastName }}
         </td>
         <td *ngIf="dataProvider.editMode">
           <input
@@ -83,22 +85,20 @@
             name="loginName"
             (input)="onChange()"
             formControlName="{{
-              user.userId === ''
-                ? 'loginName' + i
-                : user.loginName + user.userId
+              user.userId === '' ? 'loginName--' + i : user.userId + 'loginName'
             }}"
           />
         </td>
         <td *ngIf="!dataProvider.editMode">
-          {{ dataProvider.filteredUser[i].loginName }}
+          {{ userService.filteredUser[i].loginName }}
         </td>
         <td *ngIf="dataProvider.editMode">
           <input
-            type="text"
+            type="password"
             name="password"
             (input)="onChange()"
             formControlName="{{
-              user.userId === '' ? 'password' + i : user.password + user.userId
+              user.userId === '' ? 'password--' + i : user.userId + 'password'
             }}"
           />
         </td>
@@ -109,53 +109,14 @@
             name="email"
             (input)="onChange()"
             formControlName="{{
-              user.userId === '' ? 'email' + i : user.email + user.userId
+              user.userId === '' ? 'email--' + i : user.userId + 'email'
             }}"
           />
         </td>
         <td *ngIf="!dataProvider.editMode">
-          {{ dataProvider.filteredUser[i].email }}
+          {{ userService.filteredUser[i].email }}
         </td>
       </tr>
     </tbody>
   </table>
 </form>
-<!-- <div
-  class="row mb-2"
-  [ngClass]="{ 'bg-secondary text-white': i % 2 == 0 }"
-  *ngFor="let user of tempUserTable; index as i"
->
-  <form user2Form="ngForm" (ngSubmit)="save()">
-    <div class="row text-left">
-      <div class="col"><button>Remove</button></div>
-
-      <input type="text" class="form-control col" value="{{ user.userId }}" />
-
-      <input
-        type="text"
-        class="form-control col"
-        value="{{ user.firstName }}"
-        name="firstName"
-        [(ngModel)]="user.firstName"
-        required
-      />
-
-      <input type="text" class="form-control col" value="{{ user.lastName }}" />
-      <input
-        type="text"
-        class="form-control col"
-        value="{{ user.loginName }}"
-        required
-      />
-
-      <input type="text" class="form-control col" value="{{ user.password }}" />
-
-      <input type="text" class="form-control col" value="{{ user.email }}" />
-    </div>
-    <div class="row">
-      <div class="col">
-        <button type="submit">Save</button>
-      </div>
-    </div>
-  </form>
-</div> -->

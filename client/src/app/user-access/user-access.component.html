@@ -9,7 +9,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of dataProvider.data.userAccesses">
+      <tr *ngFor="let item of userAccessService.userAccesses">
         <td *ngIf="dataProvider.editMode"><button>remove</button></td>
         <td>{{ item.userId }}</td>
         <td>{{ item.groupId }}</td>

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit, Input } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-modal',
@@ -7,7 +7,8 @@ import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./modal.component.scss'],
 })
 export class ModalComponent implements OnInit {
-  constructor(private modalService: NgbModal) {}
+  @Input() content;
+  constructor(public activeModal: NgbActiveModal) {}
 
   ngOnInit(): void {}
 }

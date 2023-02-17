@@ -1,17 +1,19 @@
-<ng-template #content let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
-    <button
-      type="button"
-      class="btn-close"
-      aria-label="Close"
-      (click)="modal.dismiss('Cross click')"
-    ></button>
-  </div>
-  <div class="modal-body">
-    <div class="mb-3">
-      User Already Exists
-      <button class="btn btn-primary">OK</button>
-    </div>
-  </div>
-</ng-template>
+<div class="modal-header">
+  <h4 class="modal-title">Warning</h4>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="activeModal.dismiss('Cross click')"
+  ></button>
+</div>
+<div class="modal-body">
+  <p>{{ content }}</p>
+  <button
+    type="button"
+    class="btn btn-outline-dark"
+    (click)="activeModal.close('ok')"
+  >
+    OK
+  </button>
+</div>
