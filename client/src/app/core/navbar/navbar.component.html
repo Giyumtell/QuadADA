@@ -1,0 +1,56 @@
+<nav class="navbar navbar-expand-lg border-bottom border-secondary">
+  <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+    <ul class="nav nav-pills">
+      <li class="nav-item">
+        <a
+          class="nav-link text-dark"
+          routerLink="/"
+          routerLinkActive="active text-white"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >User</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link text-dark"
+          routerLink="/user-access"
+          routerLinkActive="active text-white"
+          >User Access</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link text-dark"
+          routerLink="/group"
+          routerLinkActive="active text-white"
+          >Group</a
+        >
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"
+          >GroupAccess</a
+        >
+      </li>
+    </ul>
+  </div>
+  <div class="align-self-end">
+    <button
+      (click)="dataProvider.toggleEdit()"
+      class="btn"
+      [ngClass]="{
+        'btn-primary': !dataProvider.editMode,
+        'btn-warning': dataProvider.editMode
+      }"
+    >
+      Edit Mode
+    </button>
+    <button
+      *ngIf="dataProvider.editMode"
+      class="btn btn-success"
+      (click)="dataProvider.save()"
+      [disabled]="!dataProvider.formValidity"
+    >
+      Save
+    </button>
+  </div>
+</nav>

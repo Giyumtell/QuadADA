@@ -1,24 +1,161 @@
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th scope="col" *ngIf="dataProvider.editMode"><button>Add</button></th>
-      <th scope="col">User id</th>
-      <th scope="col">First Name</th>
-      <th scope="col">Last Name</th>
-      <th scope="col">Login Name</th>
-      <th scope="col">Password</th>
-      <th scope="col">Employee Email</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let user of dataProvider.data.users">
-      <td *ngIf="dataProvider.editMode"><button>remove</button></td>
-      <td>{{ user.userId }}</td>
-      <td>{{ user.firstName }}</td>
-      <td>{{ user.lastName }}</td>
-      <td>{{ user.loginName }}</td>
-      <td>{{ user.password }}</td>
-      <td>{{ user.email }}</td>
-    </tr>
-  </tbody>
-</table>
+<form [formGroup]="dataProvider.userForm">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col" *ngIf="dataProvider.editMode">
+          <a (click)="addEmptyUser()" class="pointer"
+            ><i class="fa-solid fa-plus"></i
+          ></a>
+        </th>
+        <th scope="col" *ngIf="!dataProvider.editMode">
+          <div class="dummy"></div>
+        </th>
+        <th scope="col" *ngFor="let column of userService.columns; index as i">
+          <ng-container *ngIf="!column.filterable"
+            ><input
+              type="text"
+              #headerRefArray
+              value="{{ column.header }}"
+              disabled
+          /></ng-container>
+          <ng-container *ngIf="column.filterable">
+            <span (click)="switchToEnable(column.id, i)">
+              <input
+                type="text"
+                #headerRefArray
+                class="disabled"
+                formControlName="{{ column.id }}"
+                (blur)="switchToDisable(column.id, i)"
+                (input)="filterColumn(i)"
+              />
+            </span>
+          </ng-container>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of dataProvider.filteredUser; index as i">
+        <td *ngIf="dataProvider.editMode"><button>remove</button></td>
+        <td *ngIf="!dataProvider.editMode"><div class="dummy"></div></td>
+        <td *ngIf="user.userId !== ''">
+          {{ dataProvider.filteredUser[i].userId }}
+        </td>
+        <td *ngIf="user.userId === ''">
+          <input
+            type="text"
+            name="userId"
+            (input)="onChange()"
+            (blur)="onBlur('userId' + i)"
+            formControlName="{{ 'userId' + i }}"
+          />
+        </td>
+        <td *ngIf="dataProvider.editMode">
+          <input
+            type="text"
+            name="firstName"
+            (input)="onChange()"
+            formControlName="{{
+              user.userId === ''
+                ? 'firstName' + i
+                : user.firstName + user.userId
+            }}"
+          />
+        </td>
+        <td *ngIf="!dataProvider.editMode">
+          {{ dataProvider.filteredUser[i].firstName }}
+        </td>
+        <td *ngIf="dataProvider.editMode">
+          <input
+            type="text"
+            name="lastName"
+            (input)="onChange()"
+            formControlName="{{
+              user.userId === '' ? 'lastName' + i : user.lastName + user.userId
+            }}"
+          />
+        </td>
+        <td *ngIf="!dataProvider.editMode">
+          {{ dataProvider.filteredUser[i].lastName }}
+        </td>
+        <td *ngIf="dataProvider.editMode">
+          <input
+            type="text"
+            name="loginName"
+            (input)="onChange()"
+            formControlName="{{
+              user.userId === ''
+                ? 'loginName' + i
+                : user.loginName + user.userId
+            }}"
+          />
+        </td>
+        <td *ngIf="!dataProvider.editMode">
+          {{ dataProvider.filteredUser[i].loginName }}
+        </td>
+        <td *ngIf="dataProvider.editMode">
+          <input
+            type="text"
+            name="password"
+            (input)="onChange()"
+            formControlName="{{
+              user.userId === '' ? 'password' + i : user.password + user.userId
+            }}"
+          />
+        </td>
+        <td *ngIf="!dataProvider.editMode">****</td>
+        <td *ngIf="dataProvider.editMode">
+          <input
+            type="text"
+            name="email"
+            (input)="onChange()"
+            formControlName="{{
+              user.userId === '' ? 'email' + i : user.email + user.userId
+            }}"
+          />
+        </td>
+        <td *ngIf="!dataProvider.editMode">
+          {{ dataProvider.filteredUser[i].email }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</form>
+<!-- <div
+  class="row mb-2"
+  [ngClass]="{ 'bg-secondary text-white': i % 2 == 0 }"
+  *ngFor="let user of tempUserTable; index as i"
+>
+  <form user2Form="ngForm" (ngSubmit)="save()">
+    <div class="row text-left">
+      <div class="col"><button>Remove</button></div>
+
+      <input type="text" class="form-control col" value="{{ user.userId }}" />
+
+      <input
+        type="text"
+        class="form-control col"
+        value="{{ user.firstName }}"
+        name="firstName"
+        [(ngModel)]="user.firstName"
+        required
+      />
+
+      <input type="text" class="form-control col" value="{{ user.lastName }}" />
+      <input
+        type="text"
+        class="form-control col"
+        value="{{ user.loginName }}"
+        required
+      />
+
+      <input type="text" class="form-control col" value="{{ user.password }}" />
+
+      <input type="text" class="form-control col" value="{{ user.email }}" />
+    </div>
+    <div class="row">
+      <div class="col">
+        <button type="submit">Save</button>
+      </div>
+    </div>
+  </form>
+</div> -->

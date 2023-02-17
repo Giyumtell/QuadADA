@@ -1,49 +1,65 @@
 import { Injectable } from '@angular/core';
-import { Data } from './_models/data';
-import { Group } from './_models/group';
-import { User } from './_models/user';
-import { UserAccess } from './_models/userAccess';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UserService } from '../user/user.service';
+import { ColumnDefinition } from './models/columnDefinition';
+import { Data } from './models/data';
+import { Group } from './models/group';
+import { User } from './models/user';
+import { UserAccess } from './models/userAccess';
 @Injectable({
   providedIn: 'root',
 })
 export class DataProviderService {
   //mock data declaration
   public data: Data;
+  public filteredUser: User[] = [];
+  public controlls: {};
   //variable declaration
   public activeTab: string;
   public editMode: boolean;
-  constructor() {
+  public formValidity: boolean;
+  //reactive form
+  public userForm: FormGroup = new FormGroup({});
+  constructor(private fb: FormBuilder, private userService: UserService) {
     //initializing the mock data
     this.data = {
       users: [
         {
-          userId: 'Jdoe1',
-          firstName: 'john1',
-          lastName: 'doe',
+          userId: 'JDoe',
+          firstName: 'John',
+          lastName: 'Doe',
           loginName: 'johnDoe',
           password: 'password',
           email: 'john@doe.com',
         },
         {
-          userId: 'Jdoe2',
-          firstName: 'john2',
-          lastName: 'doe',
+          userId: 'DSmith',
+          firstName: 'David',
+          lastName: 'Smith',
           loginName: 'johnDoe',
           password: 'password',
           email: 'john@doe.com',
         },
         {
-          userId: 'Jdoe3',
-          firstName: 'john3',
-          lastName: 'doe',
+          userId: 'ACerny',
+          firstName: 'Amanda',
+          lastName: 'Cerny',
           loginName: 'johnDoe',
           password: 'password',
           email: 'john@doe.com',
         },
         {
-          userId: 'Jdoe4',
-          firstName: 'john4',
-          lastName: 'doe',
+          userId: 'PGriffin',
+          firstName: 'Peter',
+          lastName: 'Griffin',
+          loginName: 'johnDoe',
+          password: 'password',
+          email: 'john@doe.com',
+        },
+        {
+          userId: 'DSmall',
+          firstName: 'David',
+          lastName: 'Small',
           loginName: 'johnDoe',
           password: 'password',
           email: 'john@doe.com',
@@ -90,8 +106,10 @@ export class DataProviderService {
       ],
     };
     //variable initialization
-    this.activeTab = 'User';
+    this.formValidity = true;
+    this.activeTab = '';
     this.editMode = false;
+    this.controlls = {};
   }
   //USER SERVICES///////////////////////////////////////
   //if user doesnt exist we add it to the array of users
@@ -104,10 +122,10 @@ export class DataProviderService {
   };
   //remove user from data and also any user X group connection related to user
   public removeUser = (id: string) => {
-    this.data.users = this.data.users.filter((user) => user.userId !== id);
     this.data.userAccesses = this.data.userAccesses.filter(
       (item) => item.userId !== id
     );
+    this.data.users = this.data.users.filter((user) => user.userId !== id);
   };
   //find the user index and replace it
   public updateUser = (user: User) => {
@@ -138,10 +156,10 @@ export class DataProviderService {
   };
   //remove group from data and also any user X group connection related to group
   public removeGroup = (id: string) => {
-    this.data.groups = this.data.groups.filter((group) => group.id !== id);
     this.data.userAccesses = this.data.userAccesses.filter(
       (item) => item.groupId !== id
     );
+    this.data.groups = this.data.groups.filter((group) => group.id !== id);
   };
   //find the user index and replace it
   public updateGroup = (group: Group) => {
@@ -199,23 +217,99 @@ export class DataProviderService {
   //utilities:
   //check if the new userId exists in the mock data
   //index of user if exists and false if not
-  private indexOfUserOrFalse = (id: string) => {
+  public indexOfUserOrFalse = (id: string) => {
     var index = this.data.users.findIndex((user) => user.userId === id);
     return index === -1 ? false : index;
   };
   //check if the new groupId exists in the mock data
   //index of group if exists and false if not
-  private indexOfGroupOrFalse = (id: string) => {
+  public indexOfGroupOrFalse = (id: string) => {
     var index = this.data.groups.findIndex((group) => group.id === id);
     return index === -1 ? false : index;
   };
   //check if the relation exists
   //index of userAccess if exists and false if not
-  private indexOfUserAccessOrFalse = (userAccess: UserAccess) => {
+  public indexOfUserAccessOrFalse = (userAccess: UserAccess) => {
     var index = this.data.userAccesses.findIndex(
       (item) =>
         item.groupId === userAccess.groupId && item.userId === userAccess.userId
     );
     return index === -1 ? false : index;
+  };
+  initializeForm = (columns: ColumnDefinition[]) => {
+    var objheader = {};
+    columns.forEach((column) => {
+      //
+      if (column.filterable) {
+        objheader[column.id] = [{ value: column.header, disabled: true }];
+      }
+    });
+    var tempObj = { ...objheader, ...this.controlls };
+    this.userForm = this.fb.group(tempObj);
+  };
+  resetForm = () => {
+    var tempObj = { ...this.userForm.controls, ...this.controlls };
+    this.userForm = this.fb.group(tempObj);
+  };
+  public generateControls = () => {
+    switch (this.activeTab) {
+      case 'User':
+        this.filteredUser.forEach((user) => {
+          this.controlls[user.userId] = [user.userId, Validators.required];
+          this.controlls[user.firstName + user.userId] = [
+            user.firstName,
+            Validators.required,
+          ];
+          this.controlls[user.lastName + user.userId] = [
+            user.lastName,
+            Validators.required,
+          ];
+          this.controlls[user.loginName + user.userId] = [
+            user.loginName,
+            Validators.required,
+          ];
+          this.controlls[user.password + user.userId] = [
+            user.password,
+            Validators.required,
+          ];
+          this.controlls[user.email + user.userId] = [
+            user.email,
+            Validators.required,
+          ];
+        });
+        break;
+      default:
+        break;
+    }
+  };
+  toggleEdit = () => {
+    if (this.editMode) {
+      //getting out of edit mode
+      this.resetForm();
+      this.controlls = {};
+      debugger;
+      for (
+        let i = 0;
+        i < this.userService.lenNewUserArray &&
+        this.userService.lenNewUserArray != 0;
+        i++
+      ) {
+        this.userForm.removeControl('userId' + i);
+        this.userForm.removeControl('firstName' + i);
+        this.userForm.removeControl('lastName' + i);
+        this.userForm.removeControl('loginName' + i);
+        this.userForm.removeControl('password' + i);
+        this.userForm.removeControl('email' + i);
+      }
+      this.userService.lenNewUserArray = 0;
+    } else {
+      //getting into edit mode
+      this.generateControls();
+    }
+    this.editMode = !this.editMode;
+  };
+
+  save = () => {
+    console.log(this.filteredUser);
   };
 }

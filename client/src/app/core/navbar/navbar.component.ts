@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DataProviderService } from '../data-provider.service';
+import { DataProviderService } from '../../shared/data-provider.service';
 
 @Component({
   selector: 'app-navbar',
@@ -8,7 +8,7 @@ import { DataProviderService } from '../data-provider.service';
 })
 export class NavbarComponent implements OnInit {
   //variable declarations
-  constructor(private dataProvider: DataProviderService) {
+  constructor(public dataProvider: DataProviderService) {
     //variable initialization
   }
 

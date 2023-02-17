@@ -3,16 +3,15 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HeaderComponent } from './header/header.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { NavbarComponent } from './navbar/navbar.component';
-import { UserComponent } from './user/user.component';
-import { GroupComponent } from './group/group.component';
-import { UserAccessComponent } from './user-access/user-access.component';
+import { CoreModule } from './core/core.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, NavbarComponent, UserComponent, GroupComponent, UserAccessComponent],
-  imports: [BrowserModule, AppRoutingModule, NgbModule],
+  declarations: [
+    AppComponent,
+  ],
+  imports: [BrowserModule, AppRoutingModule, NgbModule, CoreModule, SharedModule],
   providers: [],
   bootstrap: [AppComponent],
 })

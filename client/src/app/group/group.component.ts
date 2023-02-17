@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DataProviderService } from '../data-provider.service';
+import { DataProviderService } from '../shared/data-provider.service';
 
 @Component({
   selector: 'app-group',
@@ -9,5 +9,8 @@ import { DataProviderService } from '../data-provider.service';
 export class GroupComponent implements OnInit {
   constructor(public dataProvider: DataProviderService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.dataProvider.activeTab = 'Group';
+    this.dataProvider.editMode = false;
+  }
 }

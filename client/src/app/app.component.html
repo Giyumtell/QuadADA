@@ -1,6 +1,12 @@
-<app-header></app-header>
-<app-user *ngIf="dataProvider.activeTab === 'User'"></app-user>
+<app-navbar></app-navbar>
+
+<div class="wrapper">
+  <router-outlet></router-outlet>
+</div>
+
+<app-footer></app-footer>
+<!-- <app-user *ngIf="dataProvider.activeTab === 'User'"></app-user>
 <app-group *ngIf="dataProvider.activeTab === 'Group'"></app-group>
 <app-user-access
   *ngIf="dataProvider.activeTab === 'UserAccess'"
-></app-user-access>
+></app-user-access> -->

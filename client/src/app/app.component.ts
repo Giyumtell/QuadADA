@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { DataProviderService } from './data-provider.service';
+import { DataProviderService } from './shared/data-provider.service';
 
 @Component({
   selector: 'app-root',
