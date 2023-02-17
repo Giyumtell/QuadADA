@@ -287,19 +287,13 @@ export class DataProviderService {
       //getting out of edit mode
       this.resetForm();
       this.controlls = {};
-      debugger;
       for (
         let i = 0;
         i < this.userService.lenNewUserArray &&
         this.userService.lenNewUserArray != 0;
         i++
       ) {
-        this.userForm.removeControl('userId' + i);
-        this.userForm.removeControl('firstName' + i);
-        this.userForm.removeControl('lastName' + i);
-        this.userForm.removeControl('loginName' + i);
-        this.userForm.removeControl('password' + i);
-        this.userForm.removeControl('email' + i);
+        this.filteredUser.shift();
       }
       this.userService.lenNewUserArray = 0;
     } else {
