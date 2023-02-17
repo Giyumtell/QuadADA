@@ -43,6 +43,10 @@ export class UserAccessComponent implements OnInit, AfterViewInit {
     this.headerRefArray = this.headerRef.map((para) => {
       return para.nativeElement;
     });
+    this.userAccessService.userAccessesForm.valueChanges.subscribe((data) => {
+      // Perform necessary action
+      console.log(data); // Log the form data to the console
+    });
   }
   switchToEnable = (selector: string, index: number) => {
     this.userAccessService.userAccessesForm.controls[selector].enable();
@@ -76,6 +80,7 @@ export class UserAccessComponent implements OnInit, AfterViewInit {
           )
       );
   };
+
   addEmptyUserAccess = () => {
     //creating a new user
     let newGroup: UserAccess = {
@@ -112,8 +117,8 @@ export class UserAccessComponent implements OnInit, AfterViewInit {
   onChange = (event: any) => {
     this.dataProvider.formValidity =
       this.userAccessService.userAccessesForm.valid;
-    
   };
+
   //remove userAccess from table
   removeUserAccess = (access: UserAccess, index: number) => {
     if (access.userId === '') {
@@ -134,8 +139,10 @@ export class UserAccessComponent implements OnInit, AfterViewInit {
             this.userAccessService.removeUserAccess(access);
             this.userAccessService.filteredUserAccesses =
               this.userAccessService.filteredUserAccesses.filter((item) => {
-                item.userId !== access.userId &&
-                  item.groupId !== access.groupId;
+                return (
+                  item.groupId !== access.groupId ||
+                  item.userId !== access.userId
+                );
               });
           }
         })

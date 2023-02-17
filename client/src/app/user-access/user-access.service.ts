@@ -86,10 +86,11 @@ export class UserAccessService {
   };
   //remove UserAccess from data
   public removeUserAccess = (userAccess: UserAccess) => {
-    this.userAccesses = this.userAccesses.filter(
-      (item) =>
-        item.groupId !== userAccess.groupId && item.userId !== userAccess.userId
-    );
+    this.userAccesses = this.userAccesses.filter((item) => {
+      return (
+        item.groupId !== userAccess.groupId || item.userId !== userAccess.userId
+      );
+    });
   };
   //find the userAccess index and replace it otherwise add it
   public updateOrAdd = (access: UserAccess) => {
@@ -150,11 +151,12 @@ export class UserAccessService {
         this.deleteControlTrackerAtIndex(index);
         this.maxLength--;
       } else {
+        var oldUserid = access.userId;
         access.userId = this.userAccessesForm.get(
           access.userId + access.groupId
         ).value;
         access.groupId = this.userAccessesForm.get(
-          access.groupId + access.userId
+          access.groupId + oldUserid
         ).value;
       }
     });
@@ -171,6 +173,7 @@ export class UserAccessService {
   };
   persist = () => {
     this.saveFormToTemp();
+    debugger;
     this.updateOrAddBalk(this.filteredUserAccesses);
     this.filteredUserAccesses = this.userAccesses;
     this.generateControls();
