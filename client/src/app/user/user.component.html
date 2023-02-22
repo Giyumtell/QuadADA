@@ -7,9 +7,9 @@
             ><i class="fa-solid fa-plus"></i
           ></a>
         </th>
-        <th scope="col" *ngIf="!dataProvider.editMode">
+        <!-- <th scope="col" *ngIf="!dataProvider.editMode">
           <div class="dummy"></div>
-        </th>
+        </th> -->
         <th scope="col" *ngFor="let column of userService.columns; index as i">
           <ng-container *ngIf="!column.filterable"
             ><div #headerRefArray>
@@ -33,7 +33,18 @@
     </thead>
     <tbody>
       <tr *ngFor="let user of userService.filteredUser; index as i">
-        <td *ngIf="dataProvider.editMode">
+        <td *ngFor="let column of userService.columns">
+          <input
+            *ngIf="dataProvider.editMode"
+            type="{{ column.dataAlias === 'password' ? 'password' : 'text' }}"
+            name="{{ column.dataAlias }}"
+            (input)="onChange()"
+            (blur)="onBlur(column.dataAlias + '--' + i)"
+            formControlName="{{ column.dataAlias + '--' + i }}"
+          />
+          {{ user[column.dataAlias] }}
+        </td>
+        <!-- <td *ngIf="dataProvider.editMode">
           <a (click)="removeUser(user, i)" class="pointer"
             ><i class="fa-solid fa-trash"></i
           ></a>
@@ -116,7 +127,7 @@
         </td>
         <td *ngIf="!dataProvider.editMode">
           {{ userService.filteredUser[i].email }}
-        </td>
+        </td> -->
       </tr>
     </tbody>
   </table>
